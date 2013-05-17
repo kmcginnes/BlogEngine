@@ -1,0 +1,20 @@
+﻿// main namespace for commands and messages
+namespace BlogEngine.PublishedLanguage
+// define data contract namespace for all classes
+extern "Fjord/BlogEngine"
+
+// define alias
+const name = string name
+const dateUtc = DateTime dateUtc
+const time = DateTime TimeUtc;
+
+interface Blog(BlogId Id)
+{
+    if ? = Command, IBlogCommand
+    if ! = Event, IBlogEvent
+
+    StartBlog?(name, time)
+        explicit "Start blog - {name} at {time}"
+        BlogStarted!(name, time)
+            explicit "Blog {name} started at {time}"
+}
