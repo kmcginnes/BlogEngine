@@ -54,14 +54,70 @@ namespace BlogEngine.PublishedLanguage
         }
     }
     
+        
+    
+    [DataContract(Namespace = "Fjord/BlogEngine")]
+    public partial class PostStory : Command, IBlogCommand
+    {
+        [DataMember(Order = 1)] public BlogId Id { get; private set; }
+        [DataMember(Order = 2)] public string Author { get; private set; }
+        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 4)] public string Title { get; private set; }
+        [DataMember(Order = 5)] public string Body { get; private set; }
+        
+        PostStory () {}
+        public PostStory (BlogId id, string author, DateTime timeUtc, string title, string body)
+        {
+            Id = id;
+            Author = author;
+            TimeUtc = timeUtc;
+            Title = title;
+            Body = body;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Post story - {1} at {0}", TimeUtc, Title);
+        }
+    }
+    
+        
+    
+    [DataContract(Namespace = "Fjord/BlogEngine")]
+    public partial class StoryPosted : Event, IBlogEvent
+    {
+        [DataMember(Order = 1)] public BlogId Id { get; private set; }
+        [DataMember(Order = 2)] public string Author { get; private set; }
+        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 4)] public string Title { get; private set; }
+        [DataMember(Order = 5)] public string Body { get; private set; }
+        
+        StoryPosted () {}
+        public StoryPosted (BlogId id, string author, DateTime timeUtc, string title, string body)
+        {
+            Id = id;
+            Author = author;
+            TimeUtc = timeUtc;
+            Title = title;
+            Body = body;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Story {1} posted at {0}", TimeUtc, Title);
+        }
+    }
+    
     public interface IBlogApplicationService
     {
         void When(StartBlog c);
+        void When(PostStory c);
     }
     
     public interface IBlogState
     {
         void When(BlogStarted e);
+        void When(StoryPosted e);
     }
     #endregion
 }

@@ -70,7 +70,8 @@ namespace BlogEngine
         void Execute(Command command);
     }
 
-    public abstract class AppServiceBase : IAppService
+    public abstract class AppServiceBase<TAggregateRoot> : IAppService
+        where TAggregateRoot : IAggregateRoot
     {
         protected readonly IEventStore EventStore;
 
@@ -85,9 +86,7 @@ namespace BlogEngine
             this.AsDynamic().When(command);
         }
 
-        public IAggregateState BuildStateFromEventHistory<TAggregateRoot>(
-            List<Event> eventHistory)
-            where TAggregateRoot : IAggregateRoot
+        public IAggregateState BuildStateFromEventHistory(List<Event> eventHistory)
         {
             var aggregateStateType = typeof(TAggregateRoot).BaseType.GetGenericArguments().First();
             var aggState = Activator.CreateInstance(aggregateStateType) as IAggregateState;
@@ -101,16 +100,15 @@ namespace BlogEngine
 
         // lifetime change management
         // atomic consistency boundary of an Aggregate & its contents
-        protected void ChangeAggregate<TAggregateRoot>(
+        protected void ChangeAggregate(
             Identity aggregateIdOf, Action<TAggregateRoot> usingThisMethod)
-            where TAggregateRoot : IAggregateRoot
         {
             // Load event history
             var eventStreamId = aggregateIdOf.AsDynamic().Id.ToString();
             var eventStream = EventStore.LoadEventStream(eventStreamId);
 
             var aggStateBeforeChanges =
-                BuildStateFromEventHistory<TAggregateRoot>(eventStream.Events);
+                BuildStateFromEventHistory(eventStream.Events);
 
             var aggregateToChange = (TAggregateRoot) Activator.CreateInstance(
                 typeof (TAggregateRoot), aggStateBeforeChanges);

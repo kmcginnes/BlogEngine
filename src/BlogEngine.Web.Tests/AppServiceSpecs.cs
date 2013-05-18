@@ -10,14 +10,14 @@ using Xunit;
 
 namespace BlogEngine.Web.Tests
 {
-    public class ApplicationServiceSpecsBase<TAppService> 
-        where TAppService : AppServiceBase
+    public class AppServiceSpecs<TAppService> 
+        where TAppService : IAppService
     {
         protected IFixture Fixture;
         private Event[] _given;
         private Command _when;
 
-        public ApplicationServiceSpecsBase()
+        public AppServiceSpecs()
         {
             Fixture = new Fixture().Customize(new AutoNSubstituteCustomization());
         }

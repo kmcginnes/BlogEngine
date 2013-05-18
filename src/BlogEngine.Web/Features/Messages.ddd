@@ -6,7 +6,10 @@ extern "Fjord/BlogEngine"
 // define alias
 const name = string name
 const dateUtc = DateTime dateUtc
-const time = DateTime TimeUtc;
+const time = DateTime TimeUtc
+const author = string author
+const title = string title
+const body = string body
 
 interface Blog(BlogId Id)
 {
@@ -17,4 +20,9 @@ interface Blog(BlogId Id)
         explicit "Start blog - {name} at {time}"
         BlogStarted!(name, time)
             explicit "Blog {name} started at {time}"
+
+    PostStory?(author, time, title, body)
+        explicit "Post story - {title} at {time}"
+        StoryPosted!(author, time, title, body)
+            explicit "Story {title} posted at {time}"
 }

@@ -156,7 +156,7 @@
     <Compile Include="Features\BlogState.cs" />
     <Compile Include="Features\ValueObjects.cs" />
     <Compile Include="Features\Messages.cs" />
-    <Compile Include="Features\BlogApplicationService.cs" />
+    <Compile Include="Features\BlogAppService.cs" />
     <Compile Include="FormHelper.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="HomeModule.cs" />
@@ -188,9 +188,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Features\StartBlog\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

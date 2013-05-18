@@ -11,5 +11,10 @@ namespace BlogEngine.Web.Features
         {
             ApplyChange(new BlogStarted(blogId, name, timeUtc));
         }
+
+        public void PostStory(BlogId blogId, string author, DateTime timeUtc, string title, string body)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

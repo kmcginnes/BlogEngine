@@ -10,5 +10,10 @@ namespace BlogEngine.Web.Features
         {
             _id = e.Id;
         }
+
+        public void When(StoryPosted e)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace BlogEngine.Web.Tests
 {
-    public class BlogApplicationServiceSpecs : ApplicationServiceSpecsBase<BlogApplicationService>
+    public class BlogAppServiceSpecs : AppServiceSpecs<BlogAppService>
     {
         [Fact]
         public void Test()
