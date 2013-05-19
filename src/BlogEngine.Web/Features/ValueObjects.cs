@@ -4,14 +4,14 @@ using System.Runtime.Serialization;
 namespace BlogEngine.PublishedLanguage
 {
     [Serializable]
-    public sealed class BlogId : AbstractIdentity<long>
+    public abstract class AbstractLongIdentity : AbstractIdentity<long>
     {
-        public const string TagValue = "blog";
+        public readonly string TagValue;
 
-        public BlogId(long id)
+        protected AbstractLongIdentity(long id, string tagValue)
         {
-            //Ensure.Requires(id > 0);
             Id = id;
+            TagValue = tagValue;
         }
 
         public override string GetTag()
@@ -20,11 +20,24 @@ namespace BlogEngine.PublishedLanguage
         }
 
         [DataMember(Order = 1)]
-        public override long Id { get; protected set; }
+        public override sealed long Id { get; protected set; }
+    }
 
-        public BlogId() { }
+    [Serializable]
+    public sealed class BlogId : AbstractLongIdentity
+    {
+        public BlogId(long id) : base(id, "blog") { }
     }
 
     public interface IBlogCommand : Command<BlogId> { }
     public interface IBlogEvent : Event<BlogId> { }
+
+    [Serializable]
+    public sealed class StoryId : AbstractLongIdentity
+    {
+        public StoryId(long id) : base(id, "story") { }
+    }
+
+    public interface IStoryCommand : Command<StoryId> { }
+    public interface IStoryEvent : Event<StoryId> { }
 }

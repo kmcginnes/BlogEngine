@@ -34,8 +34,8 @@ namespace BlogEngine.Web.Tests
         public void story_posts_successfully(string author, string title, string body)
         {
             Given(_blogStarted);
-            When(new PostStory(_blogId, author, title, body));
-            Expect(new StoryPosted(_blogId, author, _currentDate, title, body));
+            When(new SubmitStory(_blogId, author, title, body));
+            Expect(new StorySubmitted(_blogId, author, title, body));
         }
     }
 }

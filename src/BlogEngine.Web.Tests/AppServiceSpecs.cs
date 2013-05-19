@@ -34,6 +34,11 @@ namespace BlogEngine.Web.Tests
 
         protected void Expect(params Event[] events)
         {
+            Expect(null, events);
+        }
+
+        protected void Expect(Command command, params Event[] events)
+        {
             var eventStore = new SingleCommitMemoryStore();
             foreach (var @event in _given)
             {
@@ -51,12 +56,12 @@ namespace BlogEngine.Web.Tests
             }
             catch (DomainError e)
             {
-                actual = new Event[] {new ExceptionThrown(e.Name)};
+                actual = new Event[] { new ExceptionThrown(e.Name) };
             }
             catch (TargetInvocationException e)
             {
                 var domainError = e.InnerException as DomainError;
-                if(domainError != null)
+                if (domainError != null)
                 {
                     actual = new Event[] { new ExceptionThrown(domainError.Name) };
                 }

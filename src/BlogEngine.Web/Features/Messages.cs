@@ -55,15 +55,15 @@ namespace BlogEngine.PublishedLanguage
         
     
     [DataContract(Namespace = "Fjord/BlogEngine")]
-    public partial class PostStory : Command, IBlogCommand
+    public partial class SubmitStory : Command, IBlogCommand
     {
         [DataMember(Order = 1)] public BlogId Id { get; private set; }
         [DataMember(Order = 2)] public string Author { get; private set; }
         [DataMember(Order = 3)] public string Title { get; private set; }
         [DataMember(Order = 4)] public string Body { get; private set; }
         
-        PostStory () {}
-        public PostStory (BlogId id, string author, string title, string body)
+        SubmitStory () {}
+        public SubmitStory (BlogId id, string author, string title, string body)
         {
             Id = id;
             Author = author;
@@ -73,25 +73,79 @@ namespace BlogEngine.PublishedLanguage
         
         public override string ToString()
         {
-            return string.Format(@"Post story {1} by {0}", Author, Title);
+            return string.Format(@"Submit story {1} by {0}", Author, Title);
         }
     }
     
         
     
     [DataContract(Namespace = "Fjord/BlogEngine")]
-    public partial class StoryPosted : Event, IBlogEvent
+    public partial class StorySubmitted : Event, IBlogEvent
     {
         [DataMember(Order = 1)] public BlogId Id { get; private set; }
         [DataMember(Order = 2)] public string Author { get; private set; }
-        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 3)] public string Title { get; private set; }
+        [DataMember(Order = 4)] public string Body { get; private set; }
+        
+        StorySubmitted () {}
+        public StorySubmitted (BlogId id, string author, string title, string body)
+        {
+            Id = id;
+            Author = author;
+            Title = title;
+            Body = body;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Story {1} submitted by {0}", Author, Title);
+        }
+    }
+    
+        
+    
+    [DataContract(Namespace = "Fjord/BlogEngine")]
+    public partial class CreateStoryFromBlog : Command, IStoryCommand
+    {
+        [DataMember(Order = 1)] public StoryId Id { get; private set; }
+        [DataMember(Order = 2)] public BlogId BlogId { get; private set; }
+        [DataMember(Order = 3)] public string Author { get; private set; }
         [DataMember(Order = 4)] public string Title { get; private set; }
         [DataMember(Order = 5)] public string Body { get; private set; }
         
-        StoryPosted () {}
-        public StoryPosted (BlogId id, string author, DateTime timeUtc, string title, string body)
+        CreateStoryFromBlog () {}
+        public CreateStoryFromBlog (StoryId id, BlogId blogId, string author, string title, string body)
         {
             Id = id;
+            BlogId = blogId;
+            Author = author;
+            Title = title;
+            Body = body;
+        }
+        
+        public override string ToString()
+        {
+            return string.Format(@"Create story {2} from {0} by {1}", BlogId, Author, Title);
+        }
+    }
+    
+        
+    
+    [DataContract(Namespace = "Fjord/BlogEngine")]
+    public partial class StoryCreatedFromBlog : Event, IStoryEvent
+    {
+        [DataMember(Order = 1)] public StoryId Id { get; private set; }
+        [DataMember(Order = 2)] public BlogId BlogId { get; private set; }
+        [DataMember(Order = 3)] public string Author { get; private set; }
+        [DataMember(Order = 4)] public DateTime TimeUtc { get; private set; }
+        [DataMember(Order = 5)] public string Title { get; private set; }
+        [DataMember(Order = 6)] public string Body { get; private set; }
+        
+        StoryCreatedFromBlog () {}
+        public StoryCreatedFromBlog (StoryId id, BlogId blogId, string author, DateTime timeUtc, string title, string body)
+        {
+            Id = id;
+            BlogId = blogId;
             Author = author;
             TimeUtc = timeUtc;
             Title = title;
@@ -100,20 +154,30 @@ namespace BlogEngine.PublishedLanguage
         
         public override string ToString()
         {
-            return string.Format(@"Story {2} posted at {1} by {0}", Author, TimeUtc, Title);
+            return string.Format(@"Story {3} created from {0} submitted at {2} by {1}", BlogId, Author, TimeUtc, Title);
         }
+    }
+    
+    public interface IStoryApplicationService
+    {
+        void When(CreateStoryFromBlog c);
+    }
+    
+    public interface IStoryState
+    {
+        void When(StoryCreatedFromBlog e);
     }
     
     public interface IBlogApplicationService
     {
         void When(StartBlog c);
-        void When(PostStory c);
+        void When(SubmitStory c);
     }
     
     public interface IBlogState
     {
         void When(BlogStarted e);
-        void When(StoryPosted e);
+        void When(StorySubmitted e);
     }
     #endregion
 }

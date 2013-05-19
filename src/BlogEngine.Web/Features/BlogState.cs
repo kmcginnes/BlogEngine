@@ -11,7 +11,7 @@ namespace BlogEngine.Web.Features
             _id = e.Id;
         }
 
-        public void When(StoryPosted e)
+        public void When(StorySubmitted e)
         {
         }
     }
