@@ -32,12 +32,12 @@ namespace BlogEngine.Web.Tests
             _when = command;
         }
 
-        protected void Then(params Event[] events)
+        protected void Expect(params Event[] events)
         {
             var eventStore = new SingleCommitMemoryStore();
             foreach (var @event in _given)
             {
-                eventStore.Preload(@event.AsDynamic().Id.ToString(), @event);
+                eventStore.Preload(((dynamic)@event).Id.GetId(), @event);
             }
 
             Fixture.Register<IEventStore>(() => eventStore);
@@ -55,7 +55,15 @@ namespace BlogEngine.Web.Tests
             }
             catch (TargetInvocationException e)
             {
-                throw e.InnerException;
+                var domainError = e.InnerException as DomainError;
+                if(domainError != null)
+                {
+                    actual = new Event[] { new ExceptionThrown(domainError.Name) };
+                }
+                else
+                {
+                    throw e.InnerException;
+                }
             }
 
             // Check that events exist in stream?
@@ -65,6 +73,11 @@ namespace BlogEngine.Web.Tests
 
             if (results.Any(r => r.Failure != null))
                 Assert.True(false, "Specification failed");
+        }
+
+        public void ExpectError(string error)
+        {
+            Expect(new ExceptionThrown(error));
         }
 
         protected static IEnumerable<ExpectResult> CompareAssert(
@@ -134,21 +147,34 @@ namespace BlogEngine.Web.Tests
         {
             Console.Write(GetAdjusted(adj, text));
         }
+
+        protected class ExceptionThrown : Event, IAmFakeEventForTesting
+        {
+
+            public string Name { get; set; }
+
+            public string FakeType { get { return Name; } }
+
+            public ExceptionThrown(string name)
+            {
+                Name = name;
+            }
+
+            public override string ToString()
+            {
+                return string.Format("Domain error '{0}'", Name);
+            }
+        }
+    }
+
+    public interface IAmFakeEventForTesting
+    {
+        string FakeType { get; }
     }
 
     public class ExpectResult
     {
         public string Failure;
         public string Expectation;
-    }
-
-    public class ExceptionThrown : Event
-    {
-        public string Name { get; private set; }
-
-        public ExceptionThrown(string name)
-        {
-            Name = name;
-        }
     }
 }

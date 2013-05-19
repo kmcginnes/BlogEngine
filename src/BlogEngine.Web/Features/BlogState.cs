@@ -13,7 +13,6 @@ namespace BlogEngine.Web.Features
 
         public void When(StoryPosted e)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

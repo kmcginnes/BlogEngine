@@ -16,13 +16,13 @@ interface Blog(BlogId Id)
     if ? = Command, IBlogCommand
     if ! = Event, IBlogEvent
 
-    StartBlog?(name, time)
-        explicit "Start blog - {name} at {time}"
+    StartBlog?(name)
+        explicit "Start blog {name}"
         BlogStarted!(name, time)
             explicit "Blog {name} started at {time}"
 
-    PostStory?(author, time, title, body)
-        explicit "Post story - {title} at {time}"
+    PostStory?(author, title, body)
+        explicit "Post story {title} by {author}"
         StoryPosted!(author, time, title, body)
-            explicit "Story {title} posted at {time}"
+            explicit "Story {title} posted at {time} by {author}"
 }

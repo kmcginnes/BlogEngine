@@ -1,18 +1,41 @@
 using System;
 using BlogEngine.PublishedLanguage;
 using BlogEngine.Web.Features;
+using NSubstitute;
+using Ploeh.AutoFixture;
 using Xunit;
+using Xunit.Extensions;
 
 namespace BlogEngine.Web.Tests
 {
     public class BlogAppServiceSpecs : AppServiceSpecs<BlogAppService>
     {
-        [Fact]
-        public void Test()
+        private readonly BlogStarted _blogStarted;
+        private readonly DateTime _currentDate;
+        private readonly BlogId _blogId;
+
+        public BlogAppServiceSpecs()
+        {
+            _blogId = new BlogId(1);
+            _currentDate = DateTime.UtcNow.Date;
+            Fixture.Freeze<ITimeProvider>().GetUtcNow().Returns(_currentDate);
+            _blogStarted = new BlogStarted(_blogId, "TestName", _currentDate);
+        }
+
+        [Theory, AutoMockData]
+        public void blog_started_successfully(string name)
         {
             Given();
-            When(new StartBlog(new BlogId(1), "TestName", DateTime.UtcNow.Date));
-            Then(new BlogStarted(new BlogId(1), "TestName", DateTime.UtcNow.Date));
+            When(new StartBlog(_blogId, name));
+            Expect(new BlogStarted(_blogId, name, _currentDate));
+        }
+
+        [Theory, AutoMockData]
+        public void story_posts_successfully(string author, string title, string body)
+        {
+            Given(_blogStarted);
+            When(new PostStory(_blogId, author, title, body));
+            Expect(new StoryPosted(_blogId, author, _currentDate, title, body));
         }
     }
 }

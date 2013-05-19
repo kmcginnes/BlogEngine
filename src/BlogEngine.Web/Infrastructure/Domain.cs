@@ -22,6 +22,11 @@ namespace BlogEngine
     
     // ReSharper restore InconsistentNaming
 
+    public interface IApplicationService
+    {
+        void Execute(object command);
+    }
+
     public interface IAggregateRoot
     {
         List<Event> EventsThatCausedChange { get; }
@@ -29,20 +34,29 @@ namespace BlogEngine
 
     public interface IAggregateState
     {
+        bool IsNew { get; }
         void Apply(Event @event);
     }
 
     public abstract class AggregateState : IAggregateState
     {
+        public bool IsNew { get; private set; }
+
+        public AggregateState()
+        {
+            IsNew = true;
+        }
+
         [DebuggerStepThrough]
         public void Apply(Event @event)
         {
-            this.AsDynamic().When(@event);
+            ((dynamic)this).When((dynamic)@event);
+            IsNew = false;
         }
     }
 
     public abstract class AggregateRoot<TState> : IAggregateRoot 
-        where TState : AggregateState, new()
+        where TState : IAggregateState, new()
     {
         protected readonly TState State;
         public List<Event> EventsThatCausedChange { get; private set; }
@@ -83,7 +97,7 @@ namespace BlogEngine
         [DebuggerStepThrough]
         public void Execute(Command command)
         {
-            this.AsDynamic().When(command);
+            ((dynamic)this).When((dynamic)command);
         }
 
         public IAggregateState BuildStateFromEventHistory(List<Event> eventHistory)
@@ -104,7 +118,7 @@ namespace BlogEngine
             Identity aggregateIdOf, Action<TAggregateRoot> usingThisMethod)
         {
             // Load event history
-            var eventStreamId = aggregateIdOf.AsDynamic().Id.ToString();
+            var eventStreamId = ((dynamic)aggregateIdOf).Id.ToString();
             var eventStream = EventStore.LoadEventStream(eventStreamId);
 
             var aggStateBeforeChanges =
@@ -121,60 +135,6 @@ namespace BlogEngine
                 eventStreamId,
                 eventStream.StreamVersion,
                 aggregateToChange.EventsThatCausedChange);
-        }
-    }
-
-    public class EnsureSubject<T>
-    {
-        public T Subject { get; private set; }
-
-        public EnsureSubject(T subject)
-        {
-            Subject = subject;
-        }
-    }
-
-    public class EnsurePredicate<T>
-    {
-        public EnsureSubject<T> Subject { get; private set; }
-        public Func<bool> Predicate { get; private set; }
-
-        public EnsurePredicate(EnsureSubject<T> subject, Func<bool> predicate)
-        {
-            Subject = subject;
-            Predicate = predicate;
-        }
-
-        public void WithDomainError(string name, string format, params object[] args)
-        {
-            if (!Predicate())
-            {
-                throw DomainError.Named(name, format, args);
-            }
-        }
-    }
-
-    public static class EnsureExtensions
-    {
-        public static EnsurePredicate<T> IsNotNull<T>(this EnsureSubject<T> that) where T : class
-        {
-            return new EnsurePredicate<T>(that, () => that.Subject != null);
-        }
-        public static EnsurePredicate<T> IsNull<T>(this EnsureSubject<T> that) where T : class
-        {
-            return new EnsurePredicate<T>(that, () => that.Subject == null);
-        }
-        public static EnsurePredicate<int> IsNot(this EnsureSubject<int> that, int compareToValue)
-        {
-            return new EnsurePredicate<int>(that, () => that.Subject != compareToValue);
-        }
-        public static EnsurePredicate<string> IsNotNullOrWhitespace(this EnsureSubject<string> that)
-        {
-            return new EnsurePredicate<string>(that, () => !string.IsNullOrWhiteSpace(that.Subject));
-        }
-        public static EnsurePredicate<IEnumerable<T>> DoesNotContain<T>(this EnsureSubject<IEnumerable<T>> that, T element)
-        {
-            return new EnsurePredicate<IEnumerable<T>>(that, () => !that.Subject.Contains(element));
         }
     }
 
@@ -210,40 +170,6 @@ namespace BlogEngine
         public DomainError(string message, Exception inner) : base(message, inner) { }
 
         protected DomainError(
-            SerializationInfo info,
-            StreamingContext context)
-            : base(info, context) { }
-    }
-
-    /// <summary>
-    /// Is thrown by event store if there were changes since our last version
-    /// </summary>
-    [Serializable]
-    public class OptimisticConcurrencyException : Exception
-    {
-        public long ActualVersion { get; private set; }
-        public long ExpectedVersion { get; private set; }
-        public string Name { get; private set; }
-        public IList<Event> ActualEvents { get; private set; }
-
-        OptimisticConcurrencyException(string message, long actualVersion, long expectedVersion, string name,
-            IList<Event> serverEvents)
-            : base(message)
-        {
-            ActualVersion = actualVersion;
-            ExpectedVersion = expectedVersion;
-            Name = name;
-            ActualEvents = serverEvents;
-        }
-
-        public static OptimisticConcurrencyException Create(long actual, long expected, string name,
-            IList<Event> serverEvents)
-        {
-            var message = string.Format("Expected v{0} but found v{1} in stream '{2}'", expected, actual, name);
-            return new OptimisticConcurrencyException(message, actual, expected, name, serverEvents);
-        }
-
-        protected OptimisticConcurrencyException(
             SerializationInfo info,
             StreamingContext context)
             : base(info, context) { }

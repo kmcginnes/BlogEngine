@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Features\BlogAggregate.cs" />
+    <Compile Include="Features\BlogProjection.cs" />
     <Compile Include="Features\BlogState.cs" />
     <Compile Include="Features\ValueObjects.cs" />
     <Compile Include="Features\Messages.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Infrastructure\Bus.cs" />
     <Compile Include="Infrastructure\Database.cs" />
     <Compile Include="Infrastructure\Domain.cs" />
+    <Compile Include="Infrastructure\Ensure.cs" />
     <Compile Include="Infrastructure\EventStore.cs" />
     <Compile Include="Infrastructure\Logging.cs" />
     <Compile Include="Infrastructure\Utils.cs" />

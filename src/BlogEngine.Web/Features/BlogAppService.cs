@@ -5,16 +5,22 @@ namespace BlogEngine.Web.Features
     public class BlogAppService
         : AppServiceBase<BlogAggregate>, IBlogApplicationService
     {
-        public BlogAppService(IEventStore eventStore) : base(eventStore) { }
+        private readonly ITimeProvider _time;
+
+        public BlogAppService(IEventStore eventStore, ITimeProvider time)
+            : base(eventStore)
+        {
+            _time = time;
+        }
 
         public void When(StartBlog c)
         {
-            ChangeAggregate(c.Id, x => x.Start(c.Id, c.Name, c.TimeUtc));
+            ChangeAggregate(c.Id, x => x.Start(c.Id, c.Name, _time));
         }
 
         public void When(PostStory c)
         {
-            ChangeAggregate(c.Id, x => x.PostStory(c.Id, c.Author, c.TimeUtc, c.Title, c.Body));
+            ChangeAggregate(c.Id, x => x.PostStory(c.Id, c.Author, c.Title, c.Body, _time));
         }
     }
 }

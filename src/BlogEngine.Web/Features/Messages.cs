@@ -15,19 +15,17 @@ namespace BlogEngine.PublishedLanguage
     {
         [DataMember(Order = 1)] public BlogId Id { get; private set; }
         [DataMember(Order = 2)] public string Name { get; private set; }
-        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
         
         StartBlog () {}
-        public StartBlog (BlogId id, string name, DateTime timeUtc)
+        public StartBlog (BlogId id, string name)
         {
             Id = id;
             Name = name;
-            TimeUtc = timeUtc;
         }
         
         public override string ToString()
         {
-            return string.Format(@"Start blog - {0} at {1}", Name, TimeUtc);
+            return string.Format(@"Start blog {0}", Name);
         }
     }
     
@@ -61,23 +59,21 @@ namespace BlogEngine.PublishedLanguage
     {
         [DataMember(Order = 1)] public BlogId Id { get; private set; }
         [DataMember(Order = 2)] public string Author { get; private set; }
-        [DataMember(Order = 3)] public DateTime TimeUtc { get; private set; }
-        [DataMember(Order = 4)] public string Title { get; private set; }
-        [DataMember(Order = 5)] public string Body { get; private set; }
+        [DataMember(Order = 3)] public string Title { get; private set; }
+        [DataMember(Order = 4)] public string Body { get; private set; }
         
         PostStory () {}
-        public PostStory (BlogId id, string author, DateTime timeUtc, string title, string body)
+        public PostStory (BlogId id, string author, string title, string body)
         {
             Id = id;
             Author = author;
-            TimeUtc = timeUtc;
             Title = title;
             Body = body;
         }
         
         public override string ToString()
         {
-            return string.Format(@"Post story - {1} at {0}", TimeUtc, Title);
+            return string.Format(@"Post story {1} by {0}", Author, Title);
         }
     }
     
@@ -104,7 +100,7 @@ namespace BlogEngine.PublishedLanguage
         
         public override string ToString()
         {
-            return string.Format(@"Story {1} posted at {0}", TimeUtc, Title);
+            return string.Format(@"Story {2} posted at {1} by {0}", Author, TimeUtc, Title);
         }
     }
     
