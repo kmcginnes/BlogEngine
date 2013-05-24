@@ -9,26 +9,6 @@ namespace BlogEngine.Web.Tests
     public class SerializationSpecs
     {
         [Fact]
-        public void identities_serialize_and_deserialize()
-        {
-            var identities = typeof (Identity).Assembly.ExportedTypes
-                .Where(t => t.IsClass && !t.IsAbstract)
-                .Where(t => typeof(Identity).IsAssignableFrom(t))
-                .Where(t => t.Name.EndsWith("Id"))
-                .ToArray();
-
-            var fixture = new Fixture();
-
-            foreach (var identity in identities)
-            {
-                var instance = Activator.CreateInstance(identity, fixture.Create<long>());
-
-                SerializeDeserializeCompare<BinarySerializer>(instance);
-                SerializeDeserializeCompare<JsonSerializer>(instance);
-            }
-        }
-
-        [Fact]
         public void messages_serialize_and_deserialize()
         {
             var messageTypes = typeof(Message).Assembly.ExportedTypes
@@ -42,8 +22,11 @@ namespace BlogEngine.Web.Tests
             foreach (var messageType in messageTypes)
             {
                 var instance = fixture.CreateFromType(messageType);
+                // Concrete message types do not have [Serializable] attribute
                 //SerializeDeserializeCompare<BinarySerializer>(instance);
                 SerializeDeserializeCompare<JsonSerializer>(instance);
+                SerializeDeserializeCompare<JsonDotNetSerializer>(instance);
+                SerializeDeserializeCompare<ServiceStackJsonSerializer>(instance);
             }
         }
 
