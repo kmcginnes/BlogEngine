@@ -6,8 +6,6 @@ namespace BlogEngine.PublishedLanguage
     [Serializable]
     public abstract class AbstractLongIdentity : AbstractIdentity<long>
     {
-        public readonly string TagValue;
-
         protected AbstractLongIdentity(long id, string tagValue)
         {
             Id = id;
@@ -19,8 +17,8 @@ namespace BlogEngine.PublishedLanguage
             return TagValue;
         }
 
-        [DataMember(Order = 1)]
-        public override sealed long Id { get; protected set; }
+        [DataMember(Order = 1)] public override sealed long Id { get; protected set; }
+        [DataMember(Order = 2)] public string TagValue { get; private set; }
     }
 
     [Serializable]
