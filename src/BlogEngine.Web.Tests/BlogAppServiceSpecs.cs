@@ -1,6 +1,7 @@
 using System;
-using BlogEngine.PublishedLanguage;
+using BlogEngine.CoreDomain;
 using BlogEngine.Web.Features;
+using Fjord.Mesa;
 using NSubstitute;
 using Ploeh.AutoFixture;
 using Xunit;
@@ -18,7 +19,7 @@ namespace BlogEngine.Web.Tests
         {
             _blogId = new BlogId(1);
             _currentDate = DateTime.UtcNow.Date;
-            Fixture.Freeze<ITimeProvider>().GetUtcNow().Returns(_currentDate);
+            Fixture.Freeze<ISystemClock>().GetUtcNow().Returns(_currentDate);
             _blogStarted = new BlogStarted(_blogId, "TestName", _currentDate);
         }
 

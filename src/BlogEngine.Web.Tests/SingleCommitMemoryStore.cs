@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Fjord.Mesa;
+using Fjord.Mesa.EventStore;
 
 namespace BlogEngine.Web.Tests
 {

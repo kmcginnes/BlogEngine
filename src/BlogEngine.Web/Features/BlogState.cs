@@ -1,4 +1,5 @@
-﻿using BlogEngine.PublishedLanguage;
+﻿using BlogEngine.CoreDomain;
+using Fjord.Mesa.Domain;
 
 namespace BlogEngine.Web.Features
 {

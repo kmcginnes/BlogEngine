@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Fjord.Mesa;
 using KellermanSoftware.CompareNetObjects;
 using Ploeh.AutoFixture;
 using Xunit;

@@ -1,0 +1,40 @@
+﻿using Fjord.Mesa
+// main namespace for commands and messages
+namespace BlogEngine.CoreDomain
+// define data contract namespace for all classes
+extern "Fjord/BlogEngine"
+
+// define alias
+const name = string name
+const dateUtc = DateTime dateUtc
+const time = DateTime TimeUtc
+const author = string author
+const title = string title
+const body = string body
+
+interface Blog(BlogId Id)
+{
+    if ? = Command, IBlogCommand
+    if ! = Event, IBlogEvent
+
+    StartBlog?(name)
+        explicit "Start blog {name}"
+        BlogStarted!(name, time)
+            explicit "Blog {name} started at {time} "
+
+    SubmitStory?(author, title, body)
+        explicit "Submit story {title} by {author}"
+        StorySubmitted!(author, title, body)
+            explicit "Story {title} submitted by {author}"
+}
+
+interface Story(StoryId Id)
+{
+    if ? = Command, IStoryCommand
+    if ! = Event, IStoryEvent
+
+    CreateStoryFromBlog?(BlogId blogId, author, title, body)
+        explicit "Create story {title} from {blogId} by {author}"
+        StoryCreatedFromBlog!(BlogId blogId, author, time, title, body)
+            explicit "Story {title} created from {blogId} submitted at {time} by {author}"
+}

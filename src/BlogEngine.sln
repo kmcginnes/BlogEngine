@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogEngine.Web", "BlogEngine.Web\BlogEngine.Web.csproj", "{B9E2BF9F-6839-41DC-84D9-02ABA2A02A22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogEngine.Web.Tests", "BlogEngine.Web.Tests\BlogEngine.Web.Tests.csproj", "{6ED5A969-2F99-4D4F-B5AA-9F366F18AAA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fjord.Mesa", "Fjord.Mesa\Fjord.Mesa.csproj", "{7DAB1BC9-AB0C-43DC-B96A-EB5EE8319B2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogEngine.CoreDomain", "BlogEngine.CoreDomain\BlogEngine.CoreDomain.csproj", "{74CB817A-8A28-42D6-87C0-6C00517733C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +25,14 @@ Global
 		{6ED5A969-2F99-4D4F-B5AA-9F366F18AAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ED5A969-2F99-4D4F-B5AA-9F366F18AAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ED5A969-2F99-4D4F-B5AA-9F366F18AAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DAB1BC9-AB0C-43DC-B96A-EB5EE8319B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DAB1BC9-AB0C-43DC-B96A-EB5EE8319B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DAB1BC9-AB0C-43DC-B96A-EB5EE8319B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DAB1BC9-AB0C-43DC-B96A-EB5EE8319B2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74CB817A-8A28-42D6-87C0-6C00517733C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74CB817A-8A28-42D6-87C0-6C00517733C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74CB817A-8A28-42D6-87C0-6C00517733C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74CB817A-8A28-42D6-87C0-6C00517733C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

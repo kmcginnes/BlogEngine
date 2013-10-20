@@ -1,15 +1,18 @@
-﻿using BlogEngine.PublishedLanguage;
+﻿using BlogEngine.CoreDomain;
+using Fjord.Mesa;
+using Fjord.Mesa.Domain;
+using Fjord.Mesa.EventStore;
 
 namespace BlogEngine.Web.Features
 {
     public class BlogAppService
         : AppServiceBase<BlogAggregate>, IBlogApplicationService
     {
-        private readonly ITimeProvider _time;
+        private readonly ISystemClock _time;
         private readonly IDomainSender _send;
 
         public BlogAppService(
-            IEventStore eventStore, ITimeProvider time, IDomainSender send)
+            IEventStore eventStore, ISystemClock time, IDomainSender send)
             : base(eventStore)
         {
             _time = time;

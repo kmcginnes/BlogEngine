@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using BlogEngine.PublishedLanguage;
+﻿using BlogEngine.CoreDomain;
+using Fjord.Mesa;
+using Fjord.Mesa.Domain;
+using Fjord.Mesa.EventStore;
 
 namespace BlogEngine.Web.Features
 {
     public class StoryAppService : AppServiceBase<StoryAggregate>, IStoryApplicationService
     {
-        private readonly ITimeProvider _time;
+        private readonly ISystemClock _time;
 
-        public StoryAppService(IEventStore eventStore, ITimeProvider time) : base(eventStore)
+        public StoryAppService(IEventStore eventStore, ISystemClock time) : base(eventStore)
         {
             _time = time;
         }
@@ -25,7 +24,7 @@ namespace BlogEngine.Web.Features
     {
         public StoryAggregate(StoryState state) : base(state) { }
 
-        public void CreateFromBlog(StoryId id, BlogId blogId, string author, string title, string body, ITimeProvider time)
+        public void CreateFromBlog(StoryId id, BlogId blogId, string author, string title, string body, ISystemClock time)
         {
             Ensure(State).IsNew().WithDomainError("story already created", "Story has already been created");
             

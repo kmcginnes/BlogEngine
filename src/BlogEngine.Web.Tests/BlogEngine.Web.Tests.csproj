@@ -91,9 +91,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BlogEngine.CoreDomain\BlogEngine.CoreDomain.csproj">
+      <Project>{74CB817A-8A28-42D6-87C0-6C00517733C8}</Project>
+      <Name>BlogEngine.CoreDomain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BlogEngine.Web\BlogEngine.Web.csproj">
       <Project>{b9e2bf9f-6839-41dc-84d9-02aba2a02a22}</Project>
       <Name>BlogEngine.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fjord.Mesa\Fjord.Mesa.csproj">
+      <Project>{7DAB1BC9-AB0C-43DC-B96A-EB5EE8319B2E}</Project>
+      <Name>Fjord.Mesa</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
