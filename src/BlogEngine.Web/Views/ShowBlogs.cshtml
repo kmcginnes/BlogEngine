@@ -1,0 +1,21 @@
+﻿@inherits ViewPage<ShowBlogsResponse>
+
+<h1>Home</h1>
+
+<p>Start blog</p>
+
+<form role="form" action="/Blogs" method="PUT">
+    <div class="form-group">
+        @(Html.TextBox<CreateBlog>(x => x.Name))
+        <label for="exampleInputEmail1">Start a new blog by entering the blog's name</label>
+        <input type="text" class="form-control" id="blogtitle" placeholder="Enter email">
+    </div>
+    <button type="submit" class="btn btn-default">Create Blog</button>
+</form>
+
+<ul>
+    @foreach (var blog in Model.Blogs)
+    {
+        <li>@blog.Name by @blog.Creator at @blog.CreatedDate</li>
+    }
+</ul>

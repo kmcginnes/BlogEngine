@@ -23,18 +23,38 @@ namespace BlogEngine.CoreDomain
     }
 
     [Serializable]
-    public sealed class BlogId : AbstractLongIdentity
+    public abstract class AbstractGuidIdentity : AbstractIdentity<Guid>
     {
-        public BlogId(long id) : base(id, "blog") { }
+        protected AbstractGuidIdentity(Guid id, string tagValue)
+        {
+            Id = id;
+            TagValue = tagValue;
+        }
+
+        public override string GetTag()
+        {
+            return TagValue;
+        }
+
+        [DataMember(Order = 1)]
+        public override sealed Guid Id { get; protected set; }
+        [DataMember(Order = 2)]
+        public string TagValue { get; private set; }
+    }
+
+    [Serializable]
+    public sealed class BlogId : AbstractGuidIdentity
+    {
+        public BlogId(Guid id) : base(id, "blog") { }
     }
 
     public interface IBlogCommand { BlogId Id { get; } }
     public interface IBlogEvent { BlogId Id { get; } }
 
     [Serializable]
-    public sealed class StoryId : AbstractLongIdentity
+    public sealed class StoryId : AbstractGuidIdentity
     {
-        public StoryId(long id) : base(id, "story") { }
+        public StoryId(Guid id) : base(id, "story") { }
     }
 
     public interface IStoryCommand { StoryId Id { get; } }

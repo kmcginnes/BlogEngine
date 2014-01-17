@@ -1,6 +1,8 @@
-﻿using BlogEngine.CoreDomain;
+﻿using System;
+using BlogEngine.CoreDomain;
 using Fjord.Mesa;
 using Fjord.Mesa.Domain;
+using Funq;
 
 namespace BlogEngine.Web.Features
 {
@@ -8,12 +10,12 @@ namespace BlogEngine.Web.Features
     {
         public BlogAggregate(BlogState state) : base(state) { }
 
-        public void Start(BlogId blogId, string name, ISystemClock time)
+        public void Start(BlogId blogId, string name, ISystemClock time, string author)
         {
             Ensure(State).IsNew().WithDomainError("blog started", "Blog has already been started");
             var timeUtc = time.GetUtcNow();
 
-            ApplyChange(new BlogStarted(blogId, name, timeUtc));
+            ApplyChange(new BlogStarted(blogId, name, timeUtc, author));
         }
 
         public void SubmitStory(BlogId blogId, string author, string title, string body, IDomainSender send)
@@ -21,7 +23,7 @@ namespace BlogEngine.Web.Features
             Ensure(State).HasBeenCreated().WithDomainError("blog not started", "Blog has not been started");
 
             ApplyChange(new StorySubmitted(blogId, author, title, body));
-            send.ToStory(new CreateStoryFromBlog(new StoryId(1), blogId, author, title, body));
+            send.ToStory(new CreateStoryFromBlog(new StoryId(Guid.NewGuid()), blogId, author, title, body));
         }
     }
 
@@ -32,9 +34,9 @@ namespace BlogEngine.Web.Features
 
     public class DomainSender : IDomainSender
     {
-        private readonly TinyIoCContainer _container;
+        private readonly Container _container;
 
-        public DomainSender(TinyIoCContainer container)
+        public DomainSender(Container container)
         {
             _container = container;
         }

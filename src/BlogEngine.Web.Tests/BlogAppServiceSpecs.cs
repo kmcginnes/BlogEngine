@@ -17,18 +17,18 @@ namespace BlogEngine.Web.Tests
 
         public BlogAppServiceSpecs()
         {
-            _blogId = new BlogId(1);
+            _blogId = new BlogId(Guid.NewGuid());
             _currentDate = DateTime.UtcNow.Date;
             Fixture.Freeze<ISystemClock>().GetUtcNow().Returns(_currentDate);
-            _blogStarted = new BlogStarted(_blogId, "TestName", _currentDate);
+            _blogStarted = new BlogStarted(_blogId, "TestName", _currentDate, "Author");
         }
 
         [Theory, AutoMockData]
         public void blog_started_successfully(string name)
         {
             Given();
-            When(new StartBlog(_blogId, name));
-            Expect(new BlogStarted(_blogId, name, _currentDate));
+            When(new StartBlog(_blogId, name, "Author"));
+            Expect(new BlogStarted(_blogId, name, _currentDate, "Author"));
         }
 
         [Theory, AutoMockData]

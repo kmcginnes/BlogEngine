@@ -21,7 +21,7 @@ namespace BlogEngine.Web.Features
 
         public void When(StartBlog c)
         {
-            ChangeAggregate(c.Id, x => x.Start(c.Id, c.Name, _time));
+            ChangeAggregate(c.Id, x => x.Start(c.Id, c.Name, _time, c.Author));
         }
 
         public void When(SubmitStory c)
